@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jevbetter"
+version = "0.1.0"
+description = "A stronger one-pass scorer over a variable list of text options."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Ola Adu"}]
+dependencies = ["numpy>=1.26", "torch>=2.2"]
+
+[project.optional-dependencies]
+transformers = ["transformers>=4.45"]
+dev = ["pytest>=8"]
+
+[project.scripts]
+jevbetter-data = "jevbetter.data:main"
+jevbetter-train = "jevbetter.train:main"
+jevbetter-eval = "jevbetter.eval:main"
+jevbetter-predict = "jevbetter.predict:main"
+jevbetter-benchmark = "jevbetter.benchmark:main"
+
+[tool.setuptools.packages.find]
+include = ["jevbetter*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--import-mode=importlib"]
