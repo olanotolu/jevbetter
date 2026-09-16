@@ -1,5 +1,7 @@
 # jevbetter
 
+![jevbetter architecture](docs/architecture.png)
+
 Train a small model that chooses among a changing list of text options, done **better**.
 
 `jevbetter` is an independent reimplementation of the one-pass option-scorer idea
