@@ -1,9 +1,9 @@
 # jevbetter
 
-Train a small model that chooses among a changing list of text options — **better**.
+Train a small model that chooses among a changing list of text options, done **better**.
 
 `jevbetter` is an independent reimplementation of the one-pass option-scorer idea
-(type: text in, one probability per option out, single forward pass — no
+(type: text in, one probability per option out, single forward pass, no
 token-by-token decoding). It takes the [jevlike](https://github.com/vinnylarouge/jevlike)
 starter design and improves every part of it: the encoder, the scoring head, the
 training loop, the synthetic data, and the evaluation. Same JSONL data format,
@@ -16,7 +16,7 @@ so any `jevlike` dataset trains here unchanged.
 ## What is it?
 
 A Jev-like model takes a piece of text and a list of `N` text options and returns
-one probability per option — in one pass instead of writing an answer word by
+one probability per option, in one pass instead of writing an answer word by
 word. That makes it a natural fit for routing, ranking, classification with
 open label sets, and game controllers.
 
@@ -24,9 +24,9 @@ open label sets, and game controllers.
 
 | | jevlike (reference) | **jevbetter** |
 |---|---|---|
-| Text encoder | raw byte embeddings (weak on meaning — their words) | **hashed character n-grams** (fastText-style subword features, case-insensitive, still CPU-tiny) |
+| Text encoder | raw byte embeddings (weak on meaning, by their own words) | **hashed character n-grams** (fastText-style subword features, case-insensitive, still CPU-tiny) |
 | Context encoding | byte embeddings + positions | **2-layer transformer** over n-gram embeddings |
-| Option interaction | none — each option scored alone | **options attend to each other** first, so near-miss rivals sharpen the call |
+| Option interaction | none, each option scored alone | **options attend to each other** first, so near-miss rivals sharpen the call |
 | Scoring head | single dot product | **gated 2-layer MLP** on the option↔context interaction |
 | Training | fixed epochs, flat LR | **cosine schedule + warmup, early stopping, label smoothing** |
 | Calibration | raw softmax | **temperature scaling** fit on validation |
@@ -54,7 +54,7 @@ $ jevbetter-benchmark --reference /path/to/jevlike --epochs 8
 sentences), CPU, same 8 epochs / batch size / seed. jevbetter wins on
 accuracy (+4.3pp top-1) and calibration (2× lower ECE); the shuffled-context
 control scores 0.335 top-1, confirming the model genuinely reads the context.
-The transformer context encoder costs throughput — 40 menus/sec is still
+The transformer context encoder costs throughput: 40 menus/sec is still
 orders of magnitude faster than a decoder writing hundreds of tokens, and
 `--context-features` tunes the tradeoff.
 
@@ -77,8 +77,7 @@ jevbetter-predict runs/model.pt \
 ```
 
 The evaluation prints top-1/3/5 accuracy, MRR, calibration error, accuracy by
-menu size, throughput, and a shuffled-context control (each menu paired with
-the wrong context — a useful model beats it comfortably).
+menu size, throughput, and a shuffled-context control (each menu paired with the wrong context, which a useful model beats comfortably).
 
 ## Use your own data
 
@@ -105,8 +104,7 @@ jevbetter-train data/synthetic/train.jsonl \
   --hf-model Qwen/Qwen2.5-0.5B
 ```
 
-The checkpoint stores the trained head and the encoder name, not the frozen
-weights — loading needs access to the same Hugging Face model.
+The checkpoint stores the trained head and the encoder name, not the frozen weights, so loading needs access to the same Hugging Face model.
 
 ## Architecture
 
@@ -122,7 +120,7 @@ temperature-scaled softmax over options gives the probabilities.
   claim about matching TypeSafe's Jev or its private training method.
 - One-pass scoring needs the complete option list before prediction.
 - The n-gram encoder is stronger than byte embeddings but still shallow next
-  to a pretrained transformer — use `--encoder hf` when meaning matters most.
+  to a pretrained transformer: use `--encoder hf` when meaning matters most.
 - Accuracy depends on data quality and split quality, as always.
 
 ## Licence
