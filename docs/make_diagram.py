@@ -145,7 +145,7 @@ def main():
             family="monospace", ha="left", va="top", linespacing=1.45)
 
     ax.text(50, 27,
-            "green-ringed blocks are new vs jevlike  ·  drawn with matplotlib",
+            "green rings mark the jevbetter upgrades  ·  drawn with matplotlib",
             ha="center", va="center", color=GRAY, fontsize=8.5, family="serif",
             style="italic")
 
