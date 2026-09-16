@@ -51,6 +51,8 @@ $ jevbetter-benchmark --reference /path/to/jevlike --epochs 8
 | jevbetter | 0.916 | 0.999 | 0.955 | 0.0182 | 40 |
 <!--/BENCHMARK-->
 
+![head-to-head scoreboard](docs/scoreboard.png)
+
 800 held-out hard menus (2–8 options, near-miss negatives, distractor
 sentences), CPU, same 8 epochs / batch size / seed. jevbetter wins on
 accuracy (+4.3pp top-1) and calibration (2× lower ECE); the shuffled-context
