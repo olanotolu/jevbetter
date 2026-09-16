@@ -4,16 +4,15 @@
 
 Train a small model that chooses among a changing list of text options, done **better**.
 
-`jevbetter` is an independent reimplementation of the one-pass option-scorer idea
+`jevbetter` is a one-pass option scorer
 (type: text in, one probability per option out, single forward pass, no
-token-by-token decoding). It takes the [jevlike](https://github.com/vinnylarouge/jevlike)
-starter design and improves every part of it: the encoder, the scoring head, the
-training loop, the synthetic data, and the evaluation. Same JSONL data format,
-so any `jevlike` dataset trains here unchanged.
+token-by-token decoding), built from scratch with a stronger encoder, a
+rival-aware scoring head, and a sharper training loop. Same JSONL data format
+as the open-source [jevlike](https://github.com/vinnylarouge/jevlike) scorer,
+so any `jevlike` dataset trains here unchanged, and the benchmark below
+compares the two head-to-head on identical data.
 
-> Independent project. Not affiliated with TypeSafe or the Jev model; the
-> architecture here is original work inspired by the public description of the
-> input/output shape.
+> Independent project. Not affiliated with TypeSafe or the Jev model.
 
 ## What is it?
 
@@ -22,9 +21,9 @@ one probability per option, in one pass instead of writing an answer word by
 word. That makes it a natural fit for routing, ranking, classification with
 open label sets, and game controllers.
 
-## What's better
+## jevbetter vs jevlike
 
-| | jevlike (reference) | **jevbetter** |
+| | jevlike | **jevbetter** |
 |---|---|---|
 | Text encoder | raw byte embeddings (weak on meaning, by their own words) | **hashed character n-grams** (fastText-style subword features, case-insensitive, still CPU-tiny) |
 | Context encoding | byte embeddings + positions | **2-layer transformer** over n-gram embeddings |
@@ -48,7 +47,7 @@ $ jevbetter-benchmark --reference /path/to/jevlike --epochs 8
 <!--BENCHMARK-->
 | model | top-1 | top-3 | MRR | ECE ↓ | menus/sec |
 |---|---|---|---|---|---|
-| jevlike (reference) | 0.873 | 0.995 | n/a | 0.0367 | 4608 |
+| jevlike | 0.873 | 0.995 | n/a | 0.0367 | 4608 |
 | jevbetter | 0.916 | 0.999 | 0.955 | 0.0182 | 40 |
 <!--/BENCHMARK-->
 
@@ -95,7 +94,8 @@ row, no duplicates.
 
 ## Frozen pretrained encoder
 
-Same idea as the reference, with the stronger head on top:
+Swap the n-gram encoder for a frozen pretrained transformer under the same
+rival-aware scoring head:
 
 ```bash
 pip install -e '.[transformers]'
